@@ -1,5 +1,5 @@
 # React Native QRCodeLocalImage (remobile)
-A local qrcode image parse for react-native
+A local qrcode image parse for react-native, support for ios and android
 
 ## Installation
 ```sh
@@ -7,6 +7,7 @@ npm install @remobile/react-native-qrcode-local-image --save
 ```
 ### Installation (iOS)
 * Drag RCTQRCodeLocalImage.xcodeproj to your project on Xcode.
+* Click on your main project file (the one that represents the .xcodeproj) select Build Phases and drag libRCTQRCodeLocalImage.a from the Products folder inside the RCTQRCodeLocalImage.xcodeproj.
 * Look for Header Search Paths and make sure it contains $(SRCROOT)/../../../react-native/React as recursive.
 
 ### Installation (Android)
@@ -37,7 +38,7 @@ import com.remobile.qrcodeLocalImage.RCTQRCodeLocalImagePackage;  // <--- import
 @Override
 protected List<ReactPackage> getPackages() {
    ......
-  .addPackage(new RCTQRCodeLocalImagePackage())              // <------ add here
+   new RCTQRCodeLocalImagePackage()              // <------ add here
    ......
 }
 
@@ -97,4 +98,5 @@ var styles = StyleSheet.create({
 - `decode(path, callback)`
 
 
-### see detail use in https://github.com/remobile/react-native-template
+### see detail use
+* https://github.com/remobile/react-native-template
