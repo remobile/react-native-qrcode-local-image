@@ -1,0 +1,29 @@
+{
+    "name": "@remobile/react-native-des",
+        "version": "1.0.2",
+        "description": "A des crypto for react-native",
+        "main": "index.js",
+        "author": {
+            "name": "YunJiang.Fang",
+            "email": "42550564@qq.com"
+        },
+        "license": "MIT",
+        "keywords": [
+            "react-native",
+            "react-component",
+            "ios",
+            "android",
+            "des",
+            "crypto",
+            "remobile",
+            "mobile"
+        ],
+        "homepage": "https://github.com/remobile/react-native-des",
+        "bugs": {
+            "url": "https://github.com/remobile/react-native-des/issues"
+        },
+        "repository": {
+            "type": "git",
+            "url": "git://github.com/remobile/react-native-des.git"
+        }
+}
