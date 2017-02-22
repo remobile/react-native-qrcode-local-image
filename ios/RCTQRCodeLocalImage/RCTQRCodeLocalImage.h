@@ -7,7 +7,7 @@
 //
 
 
-#import "RCTBridgeModule.h"
+#import <React/RCTBridgeModule.h>
 
 @interface RCTQRCodeLocalImage : NSObject <RCTBridgeModule>
 

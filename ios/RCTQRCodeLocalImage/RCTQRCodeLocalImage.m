@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <React/RCTLog.h>
+#import <React/RCTUtils.h>
 #import "RCTQRCodeLocalImage.h"
-#import "RCTLog.h"
-#import "RCTUtils.h"
 
 @implementation RCTQRCodeLocalImage
 RCT_EXPORT_MODULE()
