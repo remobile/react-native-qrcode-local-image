@@ -14,6 +14,10 @@ import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Hashtable;
 
 
@@ -40,7 +44,16 @@ public class RCTQRCodeLocalImage extends ReactContextBaseJavaModule {
         if (sampleSize <= 0)
             sampleSize = 1;
         options.inSampleSize = sampleSize;
-        Bitmap scanBitmap = BitmapFactory.decodeFile(path, options);
+        Bitmap scanBitmap = null;
+        if (path.startsWith("http://")||path.startsWith("https://")) {
+            scanBitmap = this.getbitmap(path);
+        } else {
+            scanBitmap = BitmapFactory.decodeFile(path, options);
+        }
+        if (scanBitmap == null) {
+            callback.invoke("cannot load image");
+            return;
+        }
         int[] intArray = new int[scanBitmap.getWidth()*scanBitmap.getHeight()];
         scanBitmap.getPixels(intArray, 0, scanBitmap.getWidth(), 0, 0, scanBitmap.getWidth(), scanBitmap.getHeight());
 
@@ -58,5 +71,25 @@ public class RCTQRCodeLocalImage extends ReactContextBaseJavaModule {
         } catch (Exception e) {
             callback.invoke("decode error");
         }
+    }
+
+    public static Bitmap getbitmap(String imageUri) {
+        Bitmap bitmap = null;
+        try {
+            URL myFileUrl = new URL(imageUri);
+            HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
+            conn.setDoInput(true);
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            bitmap = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            bitmap = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            bitmap = null;
+        }
+        return bitmap;
     }
 }

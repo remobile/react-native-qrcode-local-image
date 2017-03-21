@@ -95,7 +95,7 @@ var styles = StyleSheet.create({
 ```
 
 ### method
-- `decode(path, callback)`
+- `decode(path, callback)` path canbe local image or url
 
 
 ### see detail use

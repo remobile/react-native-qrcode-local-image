@@ -1,6 +1,6 @@
 {
     "name": "@remobile/react-native-qrcode-local-image",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "qrcode-local-imagecription": "A local qrcode image parse for react-native",
     "main": "index.js",
     "author": {
