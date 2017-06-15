@@ -18,27 +18,21 @@ RCT_EXPORT_MODULE()
 RCT_EXPORT_METHOD(decode:(NSString *)path callback:(RCTResponseSenderBlock)callback)
 {
     
-//    UIImage *srcImage;
-//    if ([path hasPrefix:@"http://"] || [path hasPrefix:@"https://"]) {
-//        srcImage = [UIImage imageWithData: [NSData dataWithContentsOfURL:[NSURL URLWithString: path]]];
-//    } else {
-//        srcImage = [[UIImage alloc] initWithContentsOfFile:path];
-//    }
     
     ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset)
     {
         ALAssetRepresentation *rep = [myasset defaultRepresentation];
         float width = [rep dimensions].width;
         float height = [rep dimensions].height;
-        CGImageRef iref = CGImageCreateWithImageInRect([rep fullResolutionImage], CGRectMake(width/2, 0, width/2, height));
-        
+//      CGImageRef iref = CGImageCreateWithImageInRect([rep fullResolutionImage], CGRectMake(width/2, 0, width/2, height));
+        CGImageRef iref =  rep.fullScreenImage;
         if (nil==rep){
             NSLog(@"PROBLEM! IMAGE NOT LOADED\n");
             callback(@[RCTMakeError(@"IMAGE NOT LOADED!", nil, nil)]);
             return;
         }
         
-        // Write image to test
+//         Write image to test
 
 //        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 //        NSString *fileName = [rep filename];
@@ -48,7 +42,7 @@ RCT_EXPORT_METHOD(decode:(NSString *)path callback:(RCTResponseSenderBlock)callb
 //        UIImage *currentImage = [UIImage imageWithCGImage:iref];
 //        NSData *currentImageData = UIImagePNGRepresentation(currentImage);
 //        [currentImageData writeToFile:filePath atomically:YES];
-        
+//        
         NSLog(@"OK - IMAGE LOADED\n");
         NSDictionary *detectorOptions = @{@"CIDetectorAccuracy": @"CIDetectorAccuracyHigh"};
         CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:detectorOptions];
