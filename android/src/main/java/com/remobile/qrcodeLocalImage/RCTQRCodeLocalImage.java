@@ -1,7 +1,9 @@
 package com.remobile.qrcodeLocalImage;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -22,8 +24,12 @@ import java.util.Hashtable;
 
 
 public class RCTQRCodeLocalImage extends ReactContextBaseJavaModule {
+
+    private Context context;
+
     public RCTQRCodeLocalImage(ReactApplicationContext reactContext) {
         super(reactContext);
+        this.context = reactContext;
     }
 
     @Override
@@ -36,17 +42,27 @@ public class RCTQRCodeLocalImage extends ReactContextBaseJavaModule {
         Hashtable<DecodeHintType, String> hints = new Hashtable<DecodeHintType, String>();
         hints.put(DecodeHintType.CHARACTER_SET, "utf-8"); // 设置二维码内容的编码
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true; // 先获取原大小
-        options.inJustDecodeBounds = false; // 获取新的大小
+        // 返回宽度高度为原图的1/4，节省内存，解决 OOM 异常
+        options.inSampleSize = 4;
+        // 附加上图片的Config参数，解析器或根据当前的参数配置进行对应的解析，这也可以有效减少加载的内存。
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        // 由此产生的位图将分配它的像素,这样他们可以被净化系统需要回收的内存。
+        options.inPurgeable = true;
 
-        int sampleSize = (int) (options.outHeight / (float) 200);
-
-        if (sampleSize <= 0)
-            sampleSize = 1;
-        options.inSampleSize = sampleSize;
         Bitmap scanBitmap = null;
         if (path.startsWith("http://")||path.startsWith("https://")) {
             scanBitmap = this.getbitmap(path);
+        } else if (path.startsWith("content://")) {
+            try {
+                InputStream inputStream = this.context.getContentResolver().openInputStream(Uri.parse(path));
+                if (inputStream != null) {
+                    scanBitmap = BitmapFactory.decodeStream(inputStream, null, options);
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                scanBitmap = null;
+            }
         } else {
             scanBitmap = BitmapFactory.decodeFile(path, options);
         }
