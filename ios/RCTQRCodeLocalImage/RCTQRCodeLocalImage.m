@@ -17,7 +17,7 @@ RCT_EXPORT_MODULE()
 RCT_EXPORT_METHOD(decode:(NSString *)path callback:(RCTResponseSenderBlock)callback)
 {
     UIImage *srcImage;
-    if ([path hasPrefix:@"http://"] || [path hasPrefix:@"https://"]) {
+    if ([path hasPrefix:@"http://"] || [path hasPrefix:@"https://"] || [path hasPrefix:@"file://"]) {
         srcImage = [UIImage imageWithData: [NSData dataWithContentsOfURL:[NSURL URLWithString: path]]];
     } else {
         srcImage = [[UIImage alloc] initWithContentsOfFile:path];
