@@ -6,6 +6,7 @@ Pod::Spec.new do |spec|
   spec.authors      = { 'YunJiang Fang' => '42550564@qq.com' }
   spec.source       = { :git => 'https://github.com/remobile/react-native-qrcode-local-image.git' }
   spec.source_files = 'ios/RCTQRCodeLocalImage/*.{h,m}'
+  spec.summary = "this is a paaaackage"
 
   spec.dependency 'React'
 end
