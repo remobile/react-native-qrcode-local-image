@@ -1,7 +1,10 @@
 package com.remobile.qrcodeLocalImage;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.util.Base64;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -22,8 +25,12 @@ import java.util.Hashtable;
 
 
 public class RCTQRCodeLocalImage extends ReactContextBaseJavaModule {
+
+    private Context context;
+
     public RCTQRCodeLocalImage(ReactApplicationContext reactContext) {
         super(reactContext);
+        this.context = context;
     }
 
     @Override
@@ -36,17 +43,33 @@ public class RCTQRCodeLocalImage extends ReactContextBaseJavaModule {
         Hashtable<DecodeHintType, String> hints = new Hashtable<DecodeHintType, String>();
         hints.put(DecodeHintType.CHARACTER_SET, "utf-8"); // 设置二维码内容的编码
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true; // 先获取原大小
-        options.inJustDecodeBounds = false; // 获取新的大小
+        options.inSampleSize = 4;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        options.inPurgeable = true;
 
-        int sampleSize = (int) (options.outHeight / (float) 200);
-
-        if (sampleSize <= 0)
-            sampleSize = 1;
-        options.inSampleSize = sampleSize;
         Bitmap scanBitmap = null;
         if (path.startsWith("http://")||path.startsWith("https://")) {
-            scanBitmap = this.getbitmap(path);
+            scanBitmap = getbitmap(path);
+            } else if (path.startsWith("content://")) {
+            try {
+                final Uri imagePath = Uri.parse(path.replace("file://", "").replace("file:/", ""));
+                InputStream inputStream = this.context.getContentResolver().openInputStream(imagePath);
+                if (inputStream != null) {
+                    scanBitmap = BitmapFactory.decodeStream(inputStream, null, options);
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                scanBitmap = null;
+            }
+        } else if (path.startsWith("base64://")) {
+            try {
+                byte[] decodedBytes = Base64.decode(path.replace("base64://", ""), 0);
+                scanBitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+            } catch (Exception e) {
+                e.printStackTrace();
+                scanBitmap = null;
+            }
         } else {
             scanBitmap = BitmapFactory.decodeFile(path, options);
         }
